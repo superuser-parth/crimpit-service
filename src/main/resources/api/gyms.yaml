@@ -1,0 +1,90 @@
+openapi: 3.0.3
+info:
+  title: Gym Service API
+  version: 1.0.0
+  description: API for managing climbing gyms in the Crimpit network.
+
+tags:
+  - name: Gyms
+    description: Operations related to Gym management
+
+paths:
+  /gyms:
+    post:
+      summary: Register a new gym
+      description: Creates a new gym entry. The ID and Timestamps are generated automatically.
+      operationId: createGym
+      tags:
+        - Gyms
+      requestBody:
+        description: Gym data to be registered
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GymCreateRequest'
+      responses:
+        '201':
+          description: Gym created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GymResponse'
+        '400':
+          description: Invalid input data (e.g. missing required fields)
+
+components:
+  schemas:
+    # 1. Schema for INPUT (What the frontend sends you)
+    GymCreateRequest:
+      type: object
+      required:
+        - name
+        - city
+        - admin_user_id
+      properties:
+        name:
+          type: string
+          maxLength: 255
+          description: Name of the climbing gym
+          example: "Crimpit Boulder Hall"
+        location:
+          type: string
+          maxLength: 255
+          description: Physical address or area description
+          example: "123 Summit Street, Block B"
+        city:
+          type: string
+          maxLength: 100
+          description: City where the gym is located
+          example: "Bengaluru"
+        admin_user_id:
+          type: integer
+          format: int64
+          description: The ID of the user who owns/manages this gym
+          example: 42
+
+    # 2. Schema for OUTPUT (What you send back)
+    GymResponse:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: Unique database ID
+        name:
+          type: string
+        location:
+          type: string
+        city:
+          type: string
+        admin_user_id:
+          type: integer
+          format: int64
+        created_at:
+          type: string
+          format: date-time
+          description: Timestamp when the gym was registered
+        updated_at:
+          type: string
+          format: date-time

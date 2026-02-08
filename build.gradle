@@ -1,0 +1,118 @@
+import org.openapitools.generator.gradle.plugin.tasks.GenerateTask
+
+plugins {
+	id 'java'
+	id 'org.springframework.boot' version '4.0.2'
+	id 'io.spring.dependency-management' version '1.1.7'
+	id 'org.openapi.generator' version '7.12.0' // 1. MOVED HERE
+}
+
+group = 'com.crimpitco'
+version = '0.0.1-SNAPSHOT'
+description = 'Crimpit climbing gym service'
+
+java {
+	toolchain {
+		languageVersion = JavaLanguageVersion.of(25)
+	}
+}
+
+configurations {
+	compileOnly {
+		extendsFrom annotationProcessor
+	}
+}
+
+repositories {
+	mavenCentral()
+}
+
+ext {
+	set('springCloudVersion', "2025.1.0")
+
+	// 2. GLOBAL CONFIGURATION (Visible to all tasks)
+	// This map holds the settings shared by all your YAML generators
+	openApiConfig = [
+			generatorName : "spring",
+			outputDir     : "$buildDir/generated",
+			configOptions : [
+					interfaceOnly       : "true",
+					useSpringBoot3      : "true",
+					useBeanValidation   : "true",
+					openApiNullable     : "false",
+					skipDefaultInterface: "true",
+					unhandledException  : "true"
+			]
+	]
+}
+
+dependencies {
+	implementation 'org.springframework.boot:spring-boot-configuration-processor'
+	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+	implementation 'org.springframework.boot:spring-boot-starter-flyway'
+	implementation 'org.springframework.boot:spring-boot-starter-validation'
+	implementation 'org.springframework.boot:spring-boot-starter-webmvc'
+	implementation 'org.flywaydb:flyway-mysql'
+	implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
+
+	// OpenAPI Dependencies
+	implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.5'
+	implementation 'org.openapitools:jackson-databind-nullable:0.2.6'
+	implementation 'jakarta.validation:jakarta.validation-api:3.0.2'
+	implementation 'io.swagger.core.v3:swagger-annotations:2.2.21'
+
+	compileOnly 'org.projectlombok:lombok'
+	runtimeOnly 'com.mysql:mysql-connector-j'
+	annotationProcessor 'org.projectlombok:lombok'
+	testImplementation 'org.springframework.boot:spring-boot-starter-data-jpa-test'
+	testImplementation 'org.springframework.boot:spring-boot-starter-flyway-test'
+	testImplementation 'org.springframework.boot:spring-boot-starter-validation-test'
+	testImplementation 'org.springframework.boot:spring-boot-starter-webmvc-test'
+	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+}
+
+// ----------------------------------------------------------------
+// CUSTOM OPENAPI TASKS
+// ----------------------------------------------------------------
+
+// Task 1: Generate GYMS API
+tasks.register('generateGymsApi', GenerateTask) {
+	generatorName = openApiConfig.generatorName
+	// Make sure this file actually exists at this path!
+	inputSpec = "$rootDir/src/main/resources/api/gyms.yaml"
+	outputDir = openApiConfig.outputDir
+
+	apiPackage = "com.crimpit.api.gyms"
+	modelPackage = "com.crimpit.dto.gyms"
+
+	configOptions = openApiConfig.configOptions
+}
+
+// Task 2: Generate ROUTES API
+//tasks.register('generateRoutesApi', GenerateTask) {
+//	generatorName = openApiConfig.generatorName
+//	// Make sure this file actually exists at this path!
+//	inputSpec = "$rootDir/src/main/resources/api/routes.yaml"
+//	outputDir = openApiConfig.outputDir
+//
+//	apiPackage = "com.crimpit.api.routes"
+//	modelPackage = "com.crimpit.dto.routes"
+//
+//	configOptions = openApiConfig.configOptions
+//}
+
+// 3. Hook the tasks into the compilation process
+compileJava.dependsOn tasks.generateGymsApi//, tasks.generateRoutesApi
+
+// 4. Ensure generated code is treated as source
+sourceSets.main.java.srcDirs += ["$buildDir/generated/src/main/java"]
+
+dependencyManagement {
+	imports {
+		mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
+	}
+}
+
+tasks.named('test') {
+	useJUnitPlatform()
+}

@@ -1,0 +1,9 @@
+CREATE TABLE announcements (
+   id BIGINT AUTO_INCREMENT PRIMARY KEY,
+   gym_id BIGINT NOT NULL,
+   title VARCHAR(255) NOT NULL,
+   content TEXT,
+   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+
+   CONSTRAINT fk_announcements_gym FOREIGN KEY (gym_id) REFERENCES gyms(id) ON DELETE CASCADE
+);
