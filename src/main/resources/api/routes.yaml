@@ -1,0 +1,160 @@
+openapi: 3.0.3
+info:
+  title: Route Service API
+  version: 1.0.0
+  description: API for managing climbing routes in the Crimpit network.
+
+tags:
+  - name: Routes
+    description: Operations related to route management
+
+paths:
+  /routes:
+    post:
+      summary: Create a new route
+      description: Creates a new route within a gym.
+      operationId: createRoute
+      tags:
+        - Routes
+      parameters:
+        - name: gymId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RouteCreateRequest'
+      responses:
+        '201':
+          description: Route created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RouteResponse'
+        '404':
+          description: Gym not found
+    get:
+      summary: List active routes for a gym
+      operationId: listRoutes
+      tags:
+        - Routes
+      parameters:
+        - name: gymId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: List of active routes
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/RouteResponse'
+        '404':
+          description: Gym not found
+
+  /routes/{routeId}:
+    delete:
+      summary: Remove a route (soft delete)
+      operationId: deleteRoute
+      tags:
+        - Routes
+      parameters:
+        - name: routeId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '204':
+          description: Route removed
+        '404':
+          description: Route not found
+
+components:
+  schemas:
+    RouteCreateRequest:
+      type: object
+      required:
+        - grade
+        - color
+      properties:
+        name:
+          type: string
+          maxLength: 100
+          description: Optional name of the route
+          example: "Green Arete"
+        grade:
+          type: string
+          maxLength: 10
+          description: Difficulty grade (e.g., V4, 6B+)
+          example: "V4"
+        color:
+          type: string
+          maxLength: 30
+          description: Hold color
+          example: "Red"
+        setter_name:
+          type: string
+          maxLength: 100
+          description: Name of the route setter
+          example: "Alex P."
+        image_url:
+          type: string
+          maxLength: 500
+          description: URL to route image
+        official_beta_url:
+          type: string
+          maxLength: 500
+          description: URL to official beta video
+        tag_names:
+          type: array
+          description: Tags to attach to this route
+          items:
+            type: string
+            maxLength: 50
+
+    RouteResponse:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: Unique route ID
+        gym_id:
+          type: integer
+          format: int64
+          description: Owning gym ID
+        name:
+          type: string
+        grade:
+          type: string
+        color:
+          type: string
+        setter_name:
+          type: string
+        image_url:
+          type: string
+        official_beta_url:
+          type: string
+        is_active:
+          type: boolean
+          description: Whether the route is currently active
+        tag_names:
+          type: array
+          items:
+            type: string
+        created_at:
+          type: string
+          format: date-time
+          description: Timestamp when the route was created

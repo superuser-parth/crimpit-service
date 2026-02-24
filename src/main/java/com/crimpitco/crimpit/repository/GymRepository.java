@@ -15,4 +15,6 @@ public interface GymRepository extends JpaRepository<Gym, Long> {
 
     // Another example: Find by admin user to see all gyms owned by one person
     List<Gym> findByAdminUserId(Long adminUserId);
+
+    List<Gym> findByRecordStat(String recordStat);
 }

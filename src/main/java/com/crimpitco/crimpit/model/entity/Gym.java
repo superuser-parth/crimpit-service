@@ -32,6 +32,9 @@ public class Gym {
     @Column(name = "admin_user_id", nullable = false)
     private Long adminUserId;
 
+    @Column(name = "record_stat", nullable = false, length = 1)
+    private String recordStat = "A";
+
     // One Gym has Many Routes
     // 'orphanRemoval = true' means if you remove a route from this list, it deletes from DB
     @OneToMany(mappedBy = "gym", cascade = CascadeType.ALL, orphanRemoval = true)

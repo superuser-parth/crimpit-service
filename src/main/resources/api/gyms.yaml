@@ -10,6 +10,29 @@ tags:
 
 paths:
   /gyms:
+    get:
+      summary: Fetch gyms
+      description: Fetches gyms based on params
+      operationId: getGym
+      tags:
+        - Gyms
+      parameters:
+        - in: query
+          name: city
+          schema:
+            type: string
+          required: false
+      responses:
+        '200':
+          description: Gym fetched successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/GymResponse'
+        '400':
+          description: Invalid input data (e.g. missing required fields)
     post:
       summary: Register a new gym
       description: Creates a new gym entry. The ID and Timestamps are generated automatically.
@@ -33,9 +56,60 @@ paths:
         '400':
           description: Invalid input data (e.g. missing required fields)
 
+  /gyms/{gymId}:
+    delete:
+      summary: Delete existing gym
+      description: Deletes existing gym entry
+      operationId: deleteGym
+      tags:
+        - Gyms
+      parameters:
+        - in: path
+          name: gymId
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '201':
+          description: Gym deleted successfully
+          content:
+            application/json:
+              schema:
+                type: string
+        '400':
+          description: Invalid input data (e.g. missing required fields)
+    put:
+      summary: Modify existing gym
+      description: Modifies existing gym entry
+      operationId: modifyGym
+      tags:
+        - Gyms
+      requestBody:
+        description: Gym data to be registered
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GymCreateRequest'
+      parameters:
+        - in: path
+          name: gymId
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Gym modified successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GymResponse'
+        '400':
+          description: Invalid input data (e.g. missing required fields)
 components:
   schemas:
-    # 1. Schema for INPUT (What the frontend sends you)
     GymCreateRequest:
       type: object
       required:
@@ -63,8 +137,6 @@ components:
           format: int64
           description: The ID of the user who owns/manages this gym
           example: 42
-
-    # 2. Schema for OUTPUT (What you send back)
     GymResponse:
       type: object
       properties:

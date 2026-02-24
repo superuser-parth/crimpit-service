@@ -89,20 +89,44 @@ tasks.register('generateGymsApi', GenerateTask) {
 }
 
 // Task 2: Generate ROUTES API
-//tasks.register('generateRoutesApi', GenerateTask) {
-//	generatorName = openApiConfig.generatorName
-//	// Make sure this file actually exists at this path!
-//	inputSpec = "$rootDir/src/main/resources/api/routes.yaml"
-//	outputDir = openApiConfig.outputDir
-//
-//	apiPackage = "com.crimpit.api.routes"
-//	modelPackage = "com.crimpit.dto.routes"
-//
-//	configOptions = openApiConfig.configOptions
-//}
+tasks.register('generateRoutesApi', GenerateTask) {
+	generatorName = openApiConfig.generatorName
+	// Make sure this file actually exists at this path!
+	inputSpec = "$rootDir/src/main/resources/api/routes.yaml"
+	outputDir = openApiConfig.outputDir
+
+	apiPackage = "com.crimpit.api.routes"
+	modelPackage = "com.crimpit.dto.routes"
+
+	configOptions = openApiConfig.configOptions
+}
+
+// Task 3: Generate ANNOUNCEMENTS API
+tasks.register('generateAnnouncementsApi', GenerateTask) {
+	generatorName = openApiConfig.generatorName
+	inputSpec = "$rootDir/src/main/resources/api/announcements.yaml"
+	outputDir = openApiConfig.outputDir
+
+	apiPackage = "com.crimpit.api.announcements"
+	modelPackage = "com.crimpit.dto.announcements"
+
+	configOptions = openApiConfig.configOptions
+}
+
+// Task 4: Generate TAGS API
+tasks.register('generateTagsApi', GenerateTask) {
+	generatorName = openApiConfig.generatorName
+	inputSpec = "$rootDir/src/main/resources/api/tags.yaml"
+	outputDir = openApiConfig.outputDir
+
+	apiPackage = "com.crimpit.api.tags"
+	modelPackage = "com.crimpit.dto.tags"
+
+	configOptions = openApiConfig.configOptions
+}
 
 // 3. Hook the tasks into the compilation process
-compileJava.dependsOn tasks.generateGymsApi//, tasks.generateRoutesApi
+compileJava.dependsOn tasks.generateGymsApi, tasks.generateRoutesApi, tasks.generateAnnouncementsApi, tasks.generateTagsApi
 
 // 4. Ensure generated code is treated as source
 sourceSets.main.java.srcDirs += ["$buildDir/generated/src/main/java"]

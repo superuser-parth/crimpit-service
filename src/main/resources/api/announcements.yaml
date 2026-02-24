@@ -1,0 +1,97 @@
+openapi: 3.0.3
+info:
+  title: Announcement Service API
+  version: 1.0.0
+  description: API for managing gym announcements in the Crimpit network.
+
+tags:
+  - name: Announcements
+    description: Operations related to gym announcements
+
+paths:
+  /announcements:
+    post:
+      summary: Create a new announcement
+      operationId: createAnnouncement
+      tags:
+        - Announcements
+      parameters:
+        - name: gymId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AnnouncementCreateRequest'
+      responses:
+        '201':
+          description: Announcement created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AnnouncementResponse'
+        '404':
+          description: Gym not found
+    get:
+      summary: List announcements for a gym
+      operationId: listAnnouncements
+      tags:
+        - Announcements
+      parameters:
+        - name: gymId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: List of announcements
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/AnnouncementResponse'
+        '404':
+          description: Gym not found
+
+components:
+  schemas:
+    AnnouncementCreateRequest:
+      type: object
+      required:
+        - title
+      properties:
+        title:
+          type: string
+          maxLength: 255
+          description: Announcement title
+          example: "New Route Setting Day"
+        content:
+          type: string
+          description: Announcement details
+          example: "The gym will be closed from 2-5 PM for route setting."
+
+    AnnouncementResponse:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        gym_id:
+          type: integer
+          format: int64
+        title:
+          type: string
+        content:
+          type: string
+        created_at:
+          type: string
+          format: date-time
+          description: Timestamp when the announcement was created
