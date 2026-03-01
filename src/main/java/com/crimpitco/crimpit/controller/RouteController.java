@@ -29,6 +29,14 @@ public class RouteController implements RoutesApi {
     }
 
     @Override
+    public ResponseEntity<RouteResponse> modifyRoute(Long routeId, RouteCreateRequest routeCreateRequest) {
+        RouteResponse response = routeService.modifyRoute(routeId, routeCreateRequest);
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(response);
+    }
+
+    @Override
     public ResponseEntity<Void> deleteRoute(Long routeId) {
         routeService.deleteRoute(routeId);
         return ResponseEntity.noContent().build();

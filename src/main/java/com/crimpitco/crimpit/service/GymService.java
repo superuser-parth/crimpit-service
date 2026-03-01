@@ -14,7 +14,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import java.time.ZoneOffset;
-import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
@@ -36,18 +35,11 @@ public class GymService {
     }
 
     @Transactional
-    public String deleteGym(Long gymId) {
+    public void deleteGym(Long gymId) {
         Gym gymRecord = gymRepository.findById(gymId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Gym not found"));
 
-        if ("D".equalsIgnoreCase(gymRecord.getRecordStat())) {
-            return "Gym already deleted";
-        }
-
-        gymRecord.setRecordStat("D");
-        gymRepository.save(gymRecord);
-
-        return "Gym deleted successfully";
+        gymRepository.delete(gymRecord);
     }
 
     @Transactional

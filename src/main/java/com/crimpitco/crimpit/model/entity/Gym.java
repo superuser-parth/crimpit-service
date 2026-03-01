@@ -5,6 +5,8 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.SQLRestriction;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
@@ -13,6 +15,8 @@ import java.util.List;
 
 @Entity
 @Table(name = "gyms")
+@SQLDelete(sql = "UPDATE gyms SET record_stat = 'D' WHERE id = ?")
+@SQLRestriction("record_stat = 'A'")
 @Getter @Setter @NoArgsConstructor // Lombok handles boilerplate
 public class Gym {
 

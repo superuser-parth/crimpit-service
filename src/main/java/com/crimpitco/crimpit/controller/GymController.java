@@ -26,11 +26,9 @@ public class GymController implements GymsApi {
     }
 
     @Override
-    public ResponseEntity<String> deleteGym(Long gymId) {
-        String response = gymService.deleteGym(gymId);
-        return ResponseEntity
-                .status(HttpStatus.OK)
-                .body(response);
+    public ResponseEntity<Void> deleteGym(Long gymId) {
+        gymService.deleteGym(gymId);
+        return ResponseEntity.noContent().build();
     }
 
     @Override

@@ -9,7 +9,7 @@ tags:
     description: Operations related to route management
 
 paths:
-  /routes:
+  /routes/{gymId}:
     post:
       summary: Create a new route
       description: Creates a new route within a gym.
@@ -63,6 +63,34 @@ paths:
           description: Gym not found
 
   /routes/{routeId}:
+    put:
+      summary: Modify an existing route
+      description: Updates route details and tags.
+      operationId: modifyRoute
+      tags:
+        - Routes
+      parameters:
+        - name: routeId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RouteCreateRequest'
+      responses:
+        '200':
+          description: Route updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RouteResponse'
+        '404':
+          description: Route not found
     delete:
       summary: Remove a route (soft delete)
       operationId: deleteRoute
@@ -85,25 +113,12 @@ components:
   schemas:
     RouteCreateRequest:
       type: object
-      required:
-        - grade
-        - color
       properties:
         name:
           type: string
-          maxLength: 100
-          description: Optional name of the route
-          example: "Green Arete"
-        grade:
-          type: string
-          maxLength: 10
-          description: Difficulty grade (e.g., V4, 6B+)
-          example: "V4"
-        color:
-          type: string
           maxLength: 30
-          description: Hold color
-          example: "Red"
+          description: Route name
+          example: "Silence"
         setter_name:
           type: string
           maxLength: 100
@@ -136,10 +151,6 @@ components:
           format: int64
           description: Owning gym ID
         name:
-          type: string
-        grade:
-          type: string
-        color:
           type: string
         setter_name:
           type: string

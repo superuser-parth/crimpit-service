@@ -2,8 +2,6 @@ CREATE TABLE routes (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
     gym_id BIGINT NOT NULL,
     name VARCHAR(100),            -- Optional (some routes just have a color)
-    grade VARCHAR(10) NOT NULL,   -- e.g., 'V4', '6B+'
-    color VARCHAR(30) NOT NULL,   -- e.g., 'Red'
     setter_name VARCHAR(100),
     image_url VARCHAR(500),       -- URL to S3
     official_beta_url VARCHAR(500), -- URL to S3/YouTube

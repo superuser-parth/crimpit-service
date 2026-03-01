@@ -26,12 +26,6 @@ public class Route {
 
     private String name; // Optional
 
-    @Column(nullable = false)
-    private String grade; // e.g., "V5"
-
-    @Column(nullable = false)
-    private String color;
-
     private String setterName;
 
     private String imageUrl;       // S3 Link
