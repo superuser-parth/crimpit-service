@@ -9,7 +9,7 @@ tags:
     description: Operations related to gym announcements
 
 paths:
-  /announcements:
+  /announcements/{gymId}:
     post:
       summary: Create a new announcement
       operationId: createAnnouncement

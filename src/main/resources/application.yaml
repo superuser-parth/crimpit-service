@@ -6,12 +6,13 @@ spring:
     # Indented 2 spaces under 'spring'
     url: jdbc:mysql://localhost:3306/gym_service_db?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
     username: root
-    password: Parthy123
+    password: your_password
 
   flyway:
     # Indented 2 spaces under 'spring'
     enabled: true
     baseline-on-migrate: true
+
 
 eureka:
   client:
@@ -20,3 +21,5 @@ eureka:
     # Ensure this is true for clients
     register-with-eureka: true
     fetch-registry: true
+
+

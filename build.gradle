@@ -78,7 +78,6 @@ dependencies {
 // Task 1: Generate GYMS API
 tasks.register('generateGymsApi', GenerateTask) {
 	generatorName = openApiConfig.generatorName
-	// Make sure this file actually exists at this path!
 	inputSpec = "$rootDir/src/main/resources/api/gyms.yaml"
 	outputDir = openApiConfig.outputDir
 

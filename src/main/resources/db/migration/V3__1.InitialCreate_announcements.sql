@@ -1,4 +1,4 @@
-CREATE TABLE announcements (
+CREATE TABLE IF NOT EXISTS announcements (
    id BIGINT AUTO_INCREMENT PRIMARY KEY,
    gym_id BIGINT NOT NULL,
    title VARCHAR(255) NOT NULL,

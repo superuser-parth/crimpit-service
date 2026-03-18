@@ -1,4 +1,4 @@
-CREATE TABLE routes (
+CREATE TABLE IF NOT EXISTS routes (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
     gym_id BIGINT NOT NULL,
     name VARCHAR(100),            -- Optional (some routes just have a color)
@@ -17,7 +17,7 @@ CREATE TABLE routes (
 );
 
 
-CREATE TABLE route_tags (
+CREATE TABLE IF NOT EXISTS route_tags (
     route_id BIGINT NOT NULL,
     tag_id BIGINT NOT NULL,
 
